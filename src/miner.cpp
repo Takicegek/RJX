@@ -113,22 +113,23 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
     CTransaction txNew;
     txNew.vin.resize(1);
     txNew.vin[0].prevout.SetNull();
-    txNew.vout.resize(1);
+    CBitcoinAddress address(!fTestNet ? FOUNDATION : FOUNDATION_TWO);
+    txNew.vout.resize(2);
 
     if (!fProofOfStake)
     {
-        CPubKey pubkey;
-        if (!reservekey.GetReservedKey(pubkey))
-            return NULL;
-        txNew.vout[0].scriptPubKey.SetDestination(pubkey.GetID());
+        CReserveKey reservekey(pwallet);
+        txNew.vout[0].scriptPubKey.SetDestination(reservekey.GetReservedKey().GetID());
+        txNew.vout[1].scriptPubKey.SetDestination(address.Get());
     }
     else
     {
         // Height first in coinbase required for block.version=2
-        txNew.vin[0].scriptSig = (CScript() << nHeight) + COINBASE_FLAGS;
+        txNew.vin[0].scriptSig = (CScript() << pindexPrev->nHeight+1) + COINBASE_FLAGS;
         assert(txNew.vin[0].scriptSig.size() <= 100);
 
         txNew.vout[0].SetEmpty();
+        txNew.vout[1].SetEmpty();
     }
 
     // Add our coinbase tx as first transaction
