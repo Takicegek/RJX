@@ -107,6 +107,9 @@ if (true && (genesis.GetHash() != hashGenesisBlock)) {
         assert(genesis.hashMerkleRoot == uint256("0x9d35af1a8dadf0ebe7369bd5f472ed899b1b84222259ea0a1a1853b093148135"));
 
         vSeeds.push_back(CDNSSeedData("seed.axiomcoin.xyz", "seed.axiomcoin.xyz"));
+	
+	FOUNDATION "0x"
+        FOUNDATION_TWO "0x"
         
         base58Prefixes[PUBKEY_ADDRESS] = list_of(23); // A
         base58Prefixes[SCRIPT_ADDRESS] = list_of(85);
