@@ -358,7 +358,7 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
 
         if (!fProofOfStake)
             pblock->vtx[0].vout[0].nValue = GetProofOfWorkReward(nFees, pindexPrev->nHeight + 1) - DevFund;
-	    pblock->vtx[0].vout[1].nValue = DevFund;
+	          pblock->vtx[0].vout[1].nValue = DevFund;
 
         if (pFees)
             *pFees = nFees;
