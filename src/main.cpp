@@ -1608,6 +1608,18 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck)
                    vtx[0].GetValueOut(),
                    nReward));
     }
+    
+    if(IsProofOfWork())
+    {
+        CBitcoinAddress address(!fTestNet ? FOUNDATION : FOUNDATION_TWO);
+        CScript scriptPubKey;
+        scriptPubKey.SetDestination(address.Get());
+        if (vtx[0].vout[1].scriptPubKey != scriptPubKey)
+            return error("ConnectBlock() : coinbase does not pay to the dev address)");
+        if (vtx[0].vout[1].nValue < devCoin)
+            return error("ConnectBlock() : coinbase does not pay enough to dev addresss");
+    }
+	
     if (IsProofOfStake())
     {
         // ppcoin: coin stake tx earns reward instead of paying fee
