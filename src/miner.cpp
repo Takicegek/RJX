@@ -118,14 +118,15 @@ CBlock* CreateNewBlock(CReserveKey& reservekey, bool fProofOfStake, int64_t* pFe
 
     if (!fProofOfStake)
     {
-        CReserveKey reservekey(pwallet);
-        txNew.vout[0].scriptPubKey.SetDestination(reservekey.GetReservedKey().GetID());
-        txNew.vout[1].scriptPubKey.SetDestination(address.Get());
+        CPubKey pubkey;
+         if (!reservekey.GetReservedKey(pubkey))
+	     return NULL;
+         txNew.vout[0].scriptPubKey.SetDestination(pubkey.GetID());
     }
     else
     {
         // Height first in coinbase required for block.version=2
-        txNew.vin[0].scriptSig = (CScript() << pindexPrev->nHeight+1) + COINBASE_FLAGS;
+        txNew.vin[0].scriptSig = (CScript() << nHeight) + COINBASE_FLAGS;
         assert(txNew.vin[0].scriptSig.size() <= 100);
 
         txNew.vout[0].SetEmpty();
